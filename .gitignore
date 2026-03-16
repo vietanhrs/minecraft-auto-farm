@@ -1,3 +1,19 @@
+# ── Gradle ────────────────────────────────────────────────────────────────────
+.gradle/
+build/
+
+# ── Minecraft / Forge runtime ─────────────────────────────────────────────────
+run/
+META-INF/
+
+# ── Generated resources (data-gen output) ─────────────────────────────────────
+src/generated/
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Python (legacy) ───────────────────────────────────────────────────────────
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
