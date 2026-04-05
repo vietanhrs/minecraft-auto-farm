@@ -70,6 +70,8 @@ processResources {
         mod_version      : mod_version,
         mod_id           : mod_id,
         mod_name         : mod_name,
+        mod_license      : mod_license,
+        mod_authors      : mod_authors,
         forge_version    : forge_version,
         minecraft_version: minecraft_version
     ]

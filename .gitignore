@@ -5,7 +5,7 @@ bin/
 
 # ── Minecraft / Forge runtime ─────────────────────────────────────────────────
 run/
-META-INF/
+/META-INF/
 
 # ── Generated resources (data-gen output) ─────────────────────────────────────
 src/generated/
