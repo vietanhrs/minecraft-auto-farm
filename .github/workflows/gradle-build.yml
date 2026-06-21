@@ -13,8 +13,16 @@ concurrency:
 
 jobs:
   build:
-    name: Build mod
+    name: Build ${{ matrix.loader }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - loader: Forge
+            task: :forge:build
+          - loader: NeoForge
+            task: :neoforge:build
 
     steps:
       - name: Checkout repository
@@ -30,4 +38,4 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build
-        run: ./gradlew build --stacktrace
+        run: ./gradlew ${{ matrix.task }} --stacktrace

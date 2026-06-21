@@ -1,0 +1,101 @@
+plugins {
+    id 'java'
+    id 'net.minecraftforge.gradle' version '[7.0.17,8)'
+}
+
+version = mod_version
+group = mod_group_id
+base.archivesName = "${mod_id}-forge"
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+sourceSets {
+    main {
+        java.srcDirs = [
+                rootProject.file('src/common/java'),
+                rootProject.file('src/forge/java')
+        ]
+        resources.srcDirs = [
+                rootProject.file('src/common/resources'),
+                rootProject.file('src/forge/resources'),
+                rootProject.file('src/generated/resources')
+        ]
+    }
+}
+
+minecraft {
+    runs {
+        configureEach {
+            workingDir = rootProject.layout.projectDirectory.dir('run')
+
+            systemProperty 'eventbus.api.strictRuntimeChecks', 'true'
+            systemProperty 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        register('client')
+
+        register('server') {
+            args '--nogui'
+        }
+
+        register('gameTestServer')
+
+        register('data') {
+            workingDir = rootProject.layout.projectDirectory.dir('run-data')
+
+            args '--mod', mod_id, '--all',
+                    '--output', rootProject.layout.projectDirectory.dir('src/generated/resources'),
+                    '--existing', rootProject.layout.projectDirectory.dir('src/common/resources'),
+                    '--existing', rootProject.layout.projectDirectory.dir('src/forge/resources')
+        }
+    }
+}
+
+repositories {
+    minecraft.mavenizer(it)
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
+    mavenCentral()
+}
+
+processResources {
+    def replaceProperties = [
+            mod_version      : mod_version,
+            mod_id           : mod_id,
+            mod_name         : mod_name,
+            mod_license      : mod_license,
+            mod_authors      : mod_authors,
+            forge_version    : forge_version,
+            minecraft_version: minecraft_version
+    ]
+    inputs.properties replaceProperties
+    filesMatching('META-INF/mods.toml') {
+        expand replaceProperties
+    }
+    filesMatching('pack.mcmeta') {
+        expand replaceProperties
+    }
+}
+
+dependencies {
+    implementation minecraft.dependency("net.minecraftforge:forge:${minecraft_version}-${forge_version}")
+    annotationProcessor 'net.minecraftforge:eventbus-validator:7.0.1'
+}
+
+jar {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

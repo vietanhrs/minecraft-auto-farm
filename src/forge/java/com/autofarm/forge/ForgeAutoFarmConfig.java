@@ -1,19 +1,13 @@
-package com.autofarm.config;
+package com.autofarm.forge;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class AutoFarmConfig {
+public final class ForgeAutoFarmConfig {
 
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;
 
-    /** Seconds between each auto-attack swing. Default: 10 */
     public static final ForgeConfigSpec.IntValue ATTACK_INTERVAL_SECONDS;
-
-    /**
-     * Food level at or below which the player switches to food and eats.
-     * Range: 1–19 (Minecraft max food is 20). Default: 3.
-     */
     public static final ForgeConfigSpec.IntValue CRITICAL_FOOD_LEVEL;
 
     static {
@@ -29,5 +23,8 @@ public class AutoFarmConfig {
 
         BUILDER.pop();
         SPEC = BUILDER.build();
+    }
+
+    private ForgeAutoFarmConfig() {
     }
 }

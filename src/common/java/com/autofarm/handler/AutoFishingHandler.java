@@ -5,7 +5,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.FishingRodItem;
-import net.minecraftforge.event.TickEvent;
 
 import java.lang.reflect.Field;
 
@@ -56,9 +55,9 @@ public final class AutoFishingHandler {
         setEnabled(turnOn);
     }
 
-    // ── Tick handler (registered in AutoFarmMod.onClientSetup) ───────────────
+    // ── Tick handler ─────────────────────────────────────────────────────────
 
-    public static void onClientTick(TickEvent.ClientTickEvent.Post event) {
+    public static void onClientTick() {
         Minecraft mc = Minecraft.getInstance();
         if (!enabled || mc.player == null || mc.level == null || mc.gameMode == null) return;
 
