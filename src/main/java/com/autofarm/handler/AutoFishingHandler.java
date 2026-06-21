@@ -109,10 +109,7 @@ public final class AutoFishingHandler {
 
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
-            mc.player.displayClientMessage(
-                    Component.literal("§6[AutoFarm]§r Auto-fishing " + (value ? "§aENABLED" : "§cDISABLED")),
-                    false
-            );
+            mc.gui.getChat().addMessage(Component.literal("§6[AutoFarm]§r Auto-fishing " + (value ? "§aENABLED" : "§cDISABLED")));
         }
     }
 

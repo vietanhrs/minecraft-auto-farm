@@ -239,8 +239,7 @@ public final class AutoAttackHandler {
     }
 
     private static void notify(LocalPlayer player, String text) {
-        // displayClientMessage(component, hotbar): false = chat window, true = action bar
-        player.displayClientMessage(Component.literal("§6[AutoFarm]§r " + text), false);
+        Minecraft.getInstance().gui.getChat().addMessage(Component.literal("§6[AutoFarm]§r " + text));
     }
 
     public static boolean isEnabled() { return enabled; }
