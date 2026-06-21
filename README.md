@@ -1,6 +1,6 @@
 # AutoFarm
 
-A client-side Minecraft Forge mod (Minecraft 26.2 / Forge 65.x) that automates sword combat and fishing.
+A client-side Minecraft mod for Forge and NeoForge (Minecraft 26.2) that automates sword combat and fishing.
 
 ## Features
 
@@ -29,6 +29,7 @@ Commands are intercepted client-side and never sent to the server.
 
 - Minecraft 26.2
 - Forge 65.x
+- NeoForge 26.2.0.6-beta
 - Java 25
 
 ## Building
@@ -37,10 +38,18 @@ Commands are intercepted client-side and never sent to the server.
 ./gradlew build
 ```
 
+Build one loader:
+
+```bash
+./gradlew :forge:build
+./gradlew :neoforge:build
+```
+
 Run in development:
 
 ```bash
-./gradlew runClient
+./gradlew :forge:runClient
+./gradlew :neoforge:runClient
 ```
 
 ## Configuration
