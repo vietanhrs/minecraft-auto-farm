@@ -9,12 +9,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Weapon;
-import net.minecraftforge.event.TickEvent;
 
 /**
  * Handles automatic sword combat with food management.
  *
- * Chat commands (intercepted by {@link com.autofarm.AutoFarmMod}, never sent to server):
+ * Chat commands are intercepted by the active loader entrypoint and never sent to the server:
  *   {@code !attack}      — toggle on/off
  *   {@code !attack on}   — enable
  *   {@code !attack off}  — disable
@@ -56,13 +55,9 @@ public final class AutoAttackHandler {
         setEnabled(turnOn);
     }
 
-    // ── Tick handler (registered in AutoFarmMod.onClientSetup) ───────────────
+    // ── Tick handler ─────────────────────────────────────────────────────────
 
-    /**
-     * Called every game tick (after the tick runs) via
-     * {@link TickEvent.ClientTickEvent.Post#BUS}.
-     */
-    public static void onClientTick(TickEvent.ClientTickEvent.Post event) {
+    public static void onClientTick() {
         Minecraft mc = Minecraft.getInstance();
         if (!enabled || mc.player == null || mc.level == null || mc.gameMode == null) return;
 
@@ -129,7 +124,7 @@ public final class AutoAttackHandler {
 
     private static void tickAttack(Minecraft mc, LocalPlayer player) {
         int foodLevel = player.getFoodData().getFoodLevel();
-        int critical = AutoFarmConfig.CRITICAL_FOOD_LEVEL.get();
+        int critical = AutoFarmConfig.criticalFoodLevel();
 
         // ── Food check ────────────────────────────────────────────────────────
         if (foodLevel <= critical) {
@@ -160,7 +155,7 @@ public final class AutoAttackHandler {
         }
 
         // ── Perform attack ────────────────────────────────────────────────────
-        attackCooldownTicks = AutoFarmConfig.ATTACK_INTERVAL_SECONDS.get() * 20;
+        attackCooldownTicks = AutoFarmConfig.attackIntervalSeconds() * 20;
 
         if (mc.crosshairPickEntity != null) {
             mc.gameMode.attack(player, mc.crosshairPickEntity);
