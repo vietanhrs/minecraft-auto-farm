@@ -2,7 +2,6 @@ package com.autofarm.handler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.FishingRodItem;
@@ -109,10 +108,7 @@ public final class AutoFishingHandler {
 
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
-            mc.player.displayClientMessage(
-                    Component.literal("§6[AutoFarm]§r Auto-fishing " + (value ? "§aENABLED" : "§cDISABLED")),
-                    false
-            );
+            System.out.println("[AutoFarm] Auto-fishing " + (value ? "ENABLED" : "DISABLED"));
         }
     }
 

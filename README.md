@@ -1,6 +1,6 @@
 # AutoFarm
 
-A client-side Minecraft Forge mod (1.21.11 / Forge 61.x) that automates sword combat and fishing.
+A client-side Minecraft Forge mod (Minecraft 26.2 / Forge 65.x) that automates sword combat and fishing.
 
 ## Features
 
@@ -27,8 +27,9 @@ Commands are intercepted client-side and never sent to the server.
 
 ## Requirements
 
-- Minecraft 1.21.11
-- Forge 61.x
+- Minecraft 26.2
+- Forge 65.x
+- Java 25
 
 ## Building
 

@@ -1,6 +1,10 @@
 {
   "pack": {
-    "description": "AutoFarm mod resources",
-    "pack_format": 34
+    "description": "${mod_id} resources",
+    "max_format": 107,
+    "min_format": [
+      107,
+      1
+    ]
   }
 }

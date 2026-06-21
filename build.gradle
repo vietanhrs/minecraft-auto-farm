@@ -1,67 +1,50 @@
 plugins {
     id 'java'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.minecraftforge.gradle' version '[7.0.17,8)'
 }
 
 version = mod_version
 group = mod_group_id
 base.archivesName = mod_id
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+// Mojang ships Java 25 to end users in 26.1+, so target Java 25 for Minecraft 26.2.
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
-println "Java: ${System.getProperty('java.version')}, " +
-        "JVM: ${System.getProperty('java.vm.version')} (${System.getProperty('java.vendor')}), " +
-        "Arch: ${System.getProperty('os.arch')}"
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 minecraft {
-    // Official MCP mappings for 1.21.11
-    mappings channel: 'official', version: minecraft_version
-
-    copyIdeResources = true
-
     runs {
-        client {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', mod_id
-            mods {
-                "${mod_id}" { source sourceSets.main }
-            }
+        configureEach {
+            workingDir = layout.projectDirectory.dir('run')
+
+            systemProperty 'eventbus.api.strictRuntimeChecks', 'true'
+            systemProperty 'forge.enabledGameTestNamespaces', mod_id
         }
 
-        server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            mods {
-                "${mod_id}" { source sourceSets.main }
-            }
+        register('client')
+
+        register('server') {
+            args '--nogui'
         }
 
-        data {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
+        register('gameTestServer')
+
+        register('data') {
+            workingDir = layout.projectDirectory.dir('run-data')
+
             args '--mod', mod_id, '--all',
-                 '--output', file('src/generated/resources/'),
-                 '--existing', file('src/main/resources/')
-            mods {
-                "${mod_id}" { source sourceSets.main }
-            }
+                    '--output', layout.projectDirectory.dir('src/generated/resources'),
+                    '--existing', layout.projectDirectory.dir('src/main/resources')
         }
     }
 }
 
-repositories {}
-
-// Route processed resources to the same output directory as compiled class files.
-// FML's ClasspathLocator creates a SecureJar from whichever directory on the classpath
-// contains META-INF/mods.toml, then scans that same directory for @Mod-annotated classes.
-// With Gradle's default split layout (resources in build/resources/main, classes in
-// build/classes/java/main), the scan finds 0 classes and FML refuses to load the mod.
-// Merging both outputs into build/classes/java/main fixes this for `gradle runClient`.
-sourceSets.main.output.resourcesDir = sourceSets.main.java.classesDirectory.get().asFile
+repositories {
+    minecraft.mavenizer(it)
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
+    mavenCentral()
+}
 
 // Substitute ${mod_version} (and other tokens) inside mods.toml at resource-process time.
 // This is needed for dev runs where no JAR is built and ${file.jarVersion} cannot be resolved.
@@ -79,10 +62,14 @@ processResources {
     filesMatching('META-INF/mods.toml') {
         expand replaceProperties
     }
+    filesMatching('pack.mcmeta') {
+        expand replaceProperties
+    }
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    implementation minecraft.dependency("net.minecraftforge:forge:${minecraft_version}-${forge_version}")
+    annotationProcessor 'net.minecraftforge:eventbus-validator:7.0.1'
 }
 
 jar {
@@ -99,4 +86,6 @@ jar {
     }
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

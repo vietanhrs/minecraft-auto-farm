@@ -4,7 +4,6 @@ import com.autofarm.config.AutoFarmConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.food.FoodProperties;
@@ -239,8 +238,7 @@ public final class AutoAttackHandler {
     }
 
     private static void notify(LocalPlayer player, String text) {
-        // displayClientMessage(component, hotbar): false = chat window, true = action bar
-        player.displayClientMessage(Component.literal("§6[AutoFarm]§r " + text), false);
+        System.out.println("[AutoFarm] " + text.replaceAll("§.", ""));
     }
 
     public static boolean isEnabled() { return enabled; }
